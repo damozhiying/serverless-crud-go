@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"os"
 
-	//"github.com/aws/aws-sdk-go/aws"
-	//"github.com/aws/aws-sdk-go/aws/session"
-	//"github.com/aws/aws-sdk-go/service/dynamodb"
-	//"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/dynamodb"
+	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
 )
 
 type Todo struct {
@@ -20,10 +20,18 @@ type Todo struct {
 	CreatedAt   string `json:"created_at"`
 }
 
+func init() {
+	region := os.Getenv("AWS_REGION")
+	sess, err := session.NewSession(&aws.Config{
+		Region: &region},
+	)
+
+	// Create DynamoDB client
+	svc := dynamodb.New(sess)
+}
+
 func AddTodo(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 
-	// TODO: access environment variable
-	fmt.Println("test \n")
 	fmt.Println(fmt.Sprintf("AWS_REGION: %v \n", os.Getenv("AWS_REGION")))
 	fmt.Println(fmt.Sprintf("TODO_TABLE_NAME: %v \n", os.Getenv("TODOS_TABLE_NAME")))
 
